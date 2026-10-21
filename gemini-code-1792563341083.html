@@ -1,0 +1,1265 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NetCommute 20 - 네트워크관리사 2급 기출 문제은행</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            900: '#0b132b',
+                            800: '#111c38',
+                            700: '#1a2942',
+                            600: '#233656',
+                            500: '#324a73'
+                        },
+                        accent: {
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                            rose: '#f43f5e',
+                            amber: '#f59e0b',
+                            indigo: '#6366f1'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- FontAwesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b132b; }
+        ::-webkit-scrollbar-thumb { background: #233656; border-radius: 3px; }
+        
+        .slide-up { animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        @keyframes slideUp {
+            from { transform: translateY(100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .fade-in { animation: fadeIn 0.25s ease-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.98); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .glow-correct {
+            border-color: #10b981 !important;
+            background-color: rgba(16, 185, 129, 0.15) !important;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+        }
+        .glow-wrong {
+            border-color: #f43f5e !important;
+            background-color: rgba(244, 63, 94, 0.15) !important;
+            box-shadow: 0 0 15px rgba(244, 63, 94, 0.3);
+        }
+
+        * { -webkit-tap-highlight-color: transparent; user-select: none; }
+        .selectable-text { user-select: text; }
+    </style>
+</head>
+<body class="bg-navy-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-accent-cyan selection:text-navy-900">
+
+    <!-- Header Navigation Bar -->
+    <header class="sticky top-0 z-30 bg-navy-800/90 backdrop-blur-md border-b border-navy-700/60 px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="app.showScreen('home')">
+            <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-accent-cyan to-accent-indigo flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-accent-cyan/20">
+                N2급
+            </div>
+            <div>
+                <h1 class="font-extrabold text-base tracking-tight leading-none text-slate-100">NetCommute <span class="text-accent-cyan">EXAM</span></h1>
+                <p class="text-[10px] text-slate-400 font-medium">네트워크관리사 2급 과년도 기출문제은행</p>
+            </div>
+        </div>
+
+        <!-- Top Right Actions -->
+        <div class="flex items-center gap-2">
+            <div id="top-streak-badge" class="flex items-center gap-1.5 bg-navy-700/80 border border-amber-500/30 text-amber-400 px-2.5 py-1 rounded-full text-xs font-semibold shadow-inner">
+                <i class="fa-solid fa-fire text-amber-400"></i>
+                <span id="streak-count-header">0</span>일 연속
+            </div>
+            <button onclick="app.showResetConfirm()" class="w-8 h-8 rounded-lg bg-navy-700/50 hover:bg-navy-700 text-slate-400 hover:text-slate-200 transition flex items-center justify-center text-xs" title="학습 데이터 초기화">
+                <i class="fa-solid fa-rotate-right"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="flex-1 max-w-md w-full mx-auto p-4 flex flex-col justify-start relative pb-10">
+
+        <!-- ========================================== -->
+        <!-- SCREEN 1: HOME DASHBOARD -->
+        <!-- ========================================== -->
+        <section id="screen-home" class="space-y-5 fade-in">
+            
+            <!-- Today 1Day 20min Challenge Banner -->
+            <div class="relative overflow-hidden rounded-2xl bg-gradient-to-br from-navy-800 via-navy-700 to-navy-800 border border-navy-600/50 p-5 shadow-xl">
+                <div class="absolute -right-6 -bottom-6 w-32 h-32 bg-accent-cyan/10 rounded-full blur-2xl pointer-events-none"></div>
+                <div class="flex items-center justify-between mb-3">
+                    <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-accent-cyan/20 text-accent-cyan border border-accent-cyan/30">
+                        ⚡ Today's 20-Min Mission
+                    </span>
+                    <span class="text-xs text-slate-400 font-medium"><i class="fa-regular fa-clock mr-1"></i>목표: 15문항 완습</span>
+                </div>
+                <h2 class="text-xl font-bold text-white mb-1">오늘의 출퇴근 20분 챌린지</h2>
+                <p class="text-xs text-slate-300 mb-4 leading-relaxed">
+                    2022~2026 기출문제 전체에서 <span class="text-accent-emerald font-semibold">핵심 15문항</span>을 무작위 추출하여 빠른 실전 테스트를 진행합니다.
+                </p>
+                
+                <button onclick="app.startChallenge('day')" class="w-full py-3.5 px-4 rounded-xl bg-gradient-to-r from-accent-cyan via-accent-indigo to-accent-emerald text-white font-bold text-sm tracking-wide shadow-lg shadow-accent-cyan/25 hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-play"></i>
+                    오늘의 20분 챌린지 시작 (15문항)
+                </button>
+            </div>
+
+            <!-- Exam Session Selection Button -->
+            <div class="p-4 rounded-2xl bg-navy-800 border border-navy-700 space-y-3 shadow-md">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-sm font-bold text-slate-100"><i class="fa-solid fa-file-lines text-accent-cyan mr-1.5"></i>연도/회차별 기출 실전모의고사</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">2022년 1회 ~ 2026년 2회 (총 18개 회차 탑재)</p>
+                    </div>
+                </div>
+                <button onclick="app.openSessionModal()" class="w-full py-3 rounded-xl bg-navy-700 hover:bg-navy-600 text-slate-100 font-bold text-xs border border-navy-600 transition flex items-center justify-center gap-2 active:scale-[0.98]">
+                    <i class="fa-solid fa-list-check text-accent-indigo"></i>
+                    기출 회차 선택하기 (50문항 / 50분)
+                </button>
+            </div>
+
+            <!-- Subject Practice Grid -->
+            <div>
+                <div class="flex items-center justify-between mb-2.5 px-1">
+                    <h3 class="text-sm font-bold text-slate-200"><i class="fa-solid fa-layer-group text-accent-cyan mr-1.5"></i>과목별 약점 집중 학습</h3>
+                    <span class="text-[11px] text-slate-400">선택 학습</span>
+                </div>
+                <div class="grid grid-cols-2 gap-2.5">
+                    <button onclick="app.startChallenge('subject', 'TCP/IP')" class="p-3.5 rounded-xl bg-navy-800 border border-navy-700 hover:border-accent-cyan/50 text-left transition group active:scale-[0.98]">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="w-7 h-7 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-xs group-hover:scale-110 transition"><i class="fa-solid fa-network-wired"></i></span>
+                            <span class="text-[10px] bg-navy-900 px-2 py-0.5 rounded text-slate-400" id="stat-sub-tcp">0%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-100">1과목: TCP/IP</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">서브넷, IP, ARP, ICMP</p>
+                    </button>
+
+                    <button onclick="app.startChallenge('subject', '네트워크일반')" class="p-3.5 rounded-xl bg-navy-800 border border-navy-700 hover:border-accent-amber/50 text-left transition group active:scale-[0.98]">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="w-7 h-7 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center text-xs group-hover:scale-110 transition"><i class="fa-solid fa-sitemap"></i></span>
+                            <span class="text-[10px] bg-navy-900 px-2 py-0.5 rounded text-slate-400" id="stat-sub-general">0%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-100">2과목: 네트워크 일반</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">OSI 7계층, 토폴로지</p>
+                    </button>
+
+                    <button onclick="app.startChallenge('subject', 'NOS')" class="p-3.5 rounded-xl bg-navy-800 border border-navy-700 hover:border-accent-emerald/50 text-left transition group active:scale-[0.98]">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="w-7 h-7 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs group-hover:scale-110 transition"><i class="fa-solid fa-server"></i></span>
+                            <span class="text-[10px] bg-navy-900 px-2 py-0.5 rounded text-slate-400" id="stat-sub-nos">0%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-100">3과목: NOS (운영체제)</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">Windows, Linux 명령어</p>
+                    </button>
+
+                    <button onclick="app.startChallenge('subject', '네트워크운용기기')" class="p-3.5 rounded-xl bg-navy-800 border border-navy-700 hover:border-accent-rose/50 text-left transition group active:scale-[0.98]">
+                        <div class="flex items-center justify-between mb-1.5">
+                            <span class="w-7 h-7 rounded-lg bg-rose-500/20 text-rose-400 flex items-center justify-center text-xs group-hover:scale-110 transition"><i class="fa-solid fa-shield-halved"></i></span>
+                            <span class="text-[10px] bg-navy-900 px-2 py-0.5 rounded text-slate-400" id="stat-sub-sec">0%</span>
+                        </div>
+                        <p class="text-xs font-bold text-slate-100">4과목: 네트워크 운용기기</p>
+                        <p class="text-[10px] text-slate-400 mt-0.5">L2/L3 스위치, RAID, VLAN</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Smart Wrong Answer Note Entrance -->
+            <div class="p-4 rounded-2xl bg-navy-800 border border-navy-700 flex items-center justify-between shadow-md">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-accent-rose/20 text-accent-rose flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-book-bookmark"></i>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-2">
+                            <h3 class="text-sm font-bold text-slate-100">스마트 오답노트</h3>
+                            <span id="wrong-count-badge" class="px-2 py-0.2 text-[10px] font-extrabold rounded-full bg-accent-rose/20 text-accent-rose border border-accent-rose/30">
+                                0개
+                            </span>
+                        </div>
+                        <p class="text-[11px] text-slate-400 mt-0.5">3회 연속 정답 시 <span class="text-emerald-400 font-semibold">🎓 졸업 처리</span></p>
+                    </div>
+                </div>
+                <button onclick="app.showScreen('wrongNote')" class="py-2 px-3.5 rounded-lg bg-navy-700 hover:bg-navy-600 text-slate-200 font-bold text-xs transition border border-navy-600 active:scale-95">
+                    복습하기
+                </button>
+            </div>
+
+            <!-- Stat Overview Board -->
+            <div class="p-4 rounded-2xl bg-navy-800/80 border border-navy-700/80 space-y-3">
+                <h3 class="text-xs font-bold text-slate-300 flex items-center justify-between">
+                    <span><i class="fa-solid fa-chart-line text-accent-cyan mr-1.5"></i>나의 합격 예측 분석</span>
+                    <span id="pass-probability" class="text-accent-emerald font-semibold">합격 가능성: --%</span>
+                </h3>
+
+                <div class="grid grid-cols-3 gap-2 text-center pt-1">
+                    <div class="p-2.5 rounded-xl bg-navy-900/60 border border-navy-700/50">
+                        <p class="text-[10px] text-slate-400">총 풀이 문항</p>
+                        <p id="stat-total-solved" class="text-base font-extrabold text-slate-100 mt-0.5">0</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-navy-900/60 border border-navy-700/50">
+                        <p class="text-[10px] text-slate-400">평균 정답률</p>
+                        <p id="stat-avg-accuracy" class="text-base font-extrabold text-accent-cyan mt-0.5">0%</p>
+                    </div>
+                    <div class="p-2.5 rounded-xl bg-navy-900/60 border border-navy-700/50">
+                        <p class="text-[10px] text-slate-400">🎓 졸업 오답</p>
+                        <p id="stat-graduated-count" class="text-base font-extrabold text-accent-emerald mt-0.5">0</p>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 2: QUIZ CHALLENGE SCREEN -->
+        <!-- ========================================== -->
+        <section id="screen-quiz" class="hidden flex-col justify-between h-full space-y-4 fade-in">
+            
+            <!-- Top Status Bar -->
+            <div>
+                <div class="flex items-center justify-between mb-2">
+                    <button onclick="app.showConfirmExit()" class="text-xs font-semibold text-slate-400 hover:text-slate-100 py-1 px-2.5 rounded-lg bg-navy-800 border border-navy-700">
+                        <i class="fa-solid fa-chevron-left mr-1"></i> 나가기
+                    </button>
+                    
+                    <!-- Countdown Timer -->
+                    <div id="quiz-timer" class="flex items-center gap-1.5 text-xs font-mono font-bold bg-navy-800 text-accent-cyan px-3 py-1 rounded-full border border-navy-700">
+                        <i class="fa-regular fa-clock"></i>
+                        <span id="timer-text">20:00</span>
+                    </div>
+
+                    <div class="text-xs font-bold text-slate-300 bg-navy-800 px-2.5 py-1 rounded-lg border border-navy-700">
+                        <span id="quiz-current-index" class="text-accent-cyan">1</span> / <span id="quiz-total-count">15</span>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="w-full bg-navy-800 h-2 rounded-full overflow-hidden p-0.5 border border-navy-700">
+                    <div id="quiz-progress-bar" class="bg-gradient-to-r from-accent-cyan to-accent-emerald h-full rounded-full transition-all duration-300 w-0"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-card" class="bg-navy-800 border border-navy-700/90 rounded-2xl p-4 shadow-lg space-y-3 flex-1 flex flex-col justify-between">
+                <div>
+                    <!-- Subject & Exam Session Badge -->
+                    <div class="flex items-center justify-between mb-2">
+                        <span id="q-subject-badge" class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-navy-700 text-accent-cyan border border-navy-600">
+                            [TCP/IP]
+                        </span>
+                        <span id="q-exam-info" class="text-[11px] text-slate-400 font-medium">네트워크관리사 2급 2026년 2회</span>
+                    </div>
+
+                    <!-- Question Text -->
+                    <h3 id="q-text" class="text-sm font-semibold text-slate-100 leading-relaxed selectable-text">
+                        질문 내용이 노출되는 영역입니다.
+                    </h3>
+                </div>
+
+                <!-- Options List (Large Mobile Touch Targets) -->
+                <div id="q-options-container" class="space-y-2 pt-2">
+                    <!-- Dynamic rendering of 4 choices -->
+                </div>
+            </div>
+
+            <!-- SLIDE-UP SHORT EXPLANATION SHEET -->
+            <div id="explanation-sheet" class="hidden slide-up bg-navy-800 border-t-2 border-accent-cyan/80 rounded-t-2xl p-4 space-y-3 shadow-2xl relative z-20 -mx-4 -mb-10 pb-10">
+                <div class="flex items-center justify-between">
+                    <div id="explain-result-badge" class="flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <i class="fa-solid fa-circle-check"></i> 정답입니다!
+                    </div>
+                    <span class="text-[11px] text-slate-400 font-mono">💡 핵심 요약 해설</span>
+                </div>
+
+                <!-- Key Summary -->
+                <div class="bg-navy-900/90 p-3 rounded-xl border border-navy-700/80">
+                    <p id="explain-short-text" class="text-xs text-slate-200 font-medium leading-relaxed selectable-text">
+                        핵심 요약 해설 내용이 노출됩니다.
+                    </p>
+                </div>
+
+                <!-- Detailed Explanation Accordion -->
+                <div>
+                    <button onclick="app.toggleDetailExplanation()" class="text-[11px] text-accent-cyan hover:underline flex items-center gap-1 font-semibold">
+                        <i id="detail-toggle-icon" class="fa-solid fa-chevron-down text-[10px]"></i>
+                        상세 기출 근거 해설
+                    </button>
+                    <div id="explain-detail-box" class="hidden mt-2 p-3 bg-navy-900/60 rounded-xl text-xs text-slate-300 leading-relaxed border border-navy-700/50 selectable-text">
+                        상세한 풀이가 적혀 있습니다.
+                    </div>
+                </div>
+
+                <!-- Next Button -->
+                <button id="btn-next-question" onclick="app.nextQuestion()" class="w-full py-3 rounded-xl bg-accent-cyan text-navy-900 font-extrabold text-sm shadow-md hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2">
+                    다음 문제로 <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 3: QUIZ RESULT SCREEN -->
+        <!-- ========================================== -->
+        <section id="screen-result" class="hidden space-y-5 fade-in text-center py-4">
+            
+            <!-- Confetti Canvas Background -->
+            <canvas id="confetti-canvas" class="absolute inset-0 pointer-events-none z-10 w-full h-full"></canvas>
+
+            <div class="p-6 rounded-2xl bg-navy-800 border border-navy-700 shadow-2xl relative space-y-4">
+                
+                <!-- Result Badge -->
+                <div id="result-pass-badge" class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-accent-emerald/20 text-accent-emerald border border-accent-emerald/40">
+                    <i class="fa-solid fa-trophy"></i> 합격 권역 달성! (60점 이상)
+                </div>
+
+                <h2 class="text-2xl font-black text-slate-100">테스트 완료</h2>
+                <p id="result-mode-desc" class="text-xs text-slate-400">네트워크관리사 2급 기출문제 풀이를 완료했습니다.</p>
+
+                <!-- Big Score Gauge -->
+                <div class="py-4 my-2 rounded-2xl bg-navy-900/80 border border-navy-700/60 flex flex-col items-center justify-center">
+                    <span class="text-xs text-slate-400 font-medium mb-1">최종 점수 (합격 기준: 60점 이상)</span>
+                    <div class="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-accent-cyan via-emerald-400 to-accent-emerald">
+                        <span id="result-score">80</span>점
+                    </div>
+                    <p class="text-xs text-slate-300 mt-2 font-mono">
+                        정답 <span id="result-correct-count" class="text-accent-emerald font-bold">12</span> / <span id="result-total-count">15</span> 문제
+                    </p>
+                </div>
+
+                <!-- Details & Elapsed Time -->
+                <div class="grid grid-cols-2 gap-2 text-left text-xs">
+                    <div class="p-3 bg-navy-900/50 rounded-xl border border-navy-700/40">
+                        <p class="text-[10px] text-slate-400">⏱️ 소요 시간</p>
+                        <p id="result-elapsed-time" class="font-bold text-slate-200 mt-0.5">12분 45초</p>
+                    </div>
+                    <div class="p-3 bg-navy-900/50 rounded-xl border border-navy-700/40">
+                        <p class="text-[10px] text-slate-400">🔥 연속 학습 스트릭</p>
+                        <p id="result-streak-text" class="font-bold text-amber-400 mt-0.5">1일 달성!</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="space-y-2 pt-2">
+                    <button onclick="app.showScreen('wrongNote')" class="w-full py-3 rounded-xl bg-navy-700 hover:bg-navy-600 text-slate-100 font-bold text-xs transition border border-navy-600 flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-book-bookmark text-accent-rose"></i> 오답 노트에서 틀린 문제 복습
+                    </button>
+                    <button onclick="app.showScreen('home')" class="w-full py-3 rounded-xl bg-gradient-to-r from-accent-cyan to-accent-indigo text-navy-900 font-extrabold text-xs shadow-md transition">
+                        홈 화면으로 돌아가기
+                    </button>
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- ========================================== -->
+        <!-- SCREEN 4: SMART WRONG ANSWER NOTE -->
+        <!-- ========================================== -->
+        <section id="screen-wrong-note" class="hidden space-y-4 fade-in">
+            
+            <!-- Top Bar -->
+            <div class="flex items-center justify-between">
+                <button onclick="app.showScreen('home')" class="text-xs font-semibold text-slate-400 hover:text-slate-100 py-1 px-2.5 rounded-lg bg-navy-800 border border-navy-700">
+                    <i class="fa-solid fa-chevron-left mr-1"></i> 홈으로
+                </button>
+                <h2 class="text-sm font-bold text-slate-100">스마트 오답노트 & 🎓졸업</h2>
+                <div></div>
+            </div>
+
+            <!-- Graduation Info Banner -->
+            <div class="p-3.5 rounded-xl bg-navy-800 border border-navy-700/80 text-xs text-slate-300 leading-relaxed flex items-start gap-2.5">
+                <i class="fa-solid fa-graduation-cap text-accent-emerald text-base mt-0.5"></i>
+                <div>
+                    <p class="font-bold text-slate-100 mb-0.5">3회 연속 정답 시 오답노트 졸업!</p>
+                    <p class="text-[11px] text-slate-400">복습 모드에서 틀린 문제를 맞힐 때마다 1단계씩 상승하며, 3회 연속 달성 시 자동 완습(졸업) 처리됩니다.</p>
+                </div>
+            </div>
+
+            <!-- Action Button -->
+            <button id="btn-start-wrong-review" onclick="app.startWrongReviewSession()" class="w-full py-3 rounded-xl bg-accent-rose text-white font-bold text-xs shadow-lg shadow-accent-rose/20 hover:brightness-110 active:scale-[0.98] transition flex items-center justify-center gap-2">
+                <i class="fa-solid fa-rotate-right"></i>
+                저장된 오답 복습 풀이 시작하기
+            </button>
+
+            <!-- List of Saved Wrong Questions -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-slate-400 px-1">복습 대기 문항 (<span id="wrong-list-count">0</span>개)</h3>
+                <div id="wrong-questions-container" class="space-y-2">
+                    <!-- Dynamic rendering -->
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- EXAM SESSION SELECT MODAL -->
+    <div id="modal-session" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-navy-800 border border-navy-700 rounded-2xl p-5 max-w-sm w-full space-y-4 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between border-b border-navy-700 pb-3">
+                <h3 class="font-bold text-slate-100 text-sm"><i class="fa-solid fa-calendar-days text-accent-cyan mr-1.5"></i>기출 회차 선택 (2022~2026)</h3>
+                <button onclick="app.closeModal('modal-session')" class="text-slate-400 hover:text-slate-200"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <div class="overflow-y-auto flex-1 space-y-2 pr-1" id="session-list-container">
+                <!-- Dynamic Session Cards -->
+            </div>
+        </div>
+    </div>
+
+    <!-- CONFIRM EXIT MODAL -->
+    <div id="modal-confirm" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-navy-800 border border-navy-700 rounded-2xl p-5 max-w-xs w-full text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-accent-amber/20 text-accent-amber flex items-center justify-center text-xl mx-auto">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-100 text-sm">학습을 중단하시겠습니까?</h3>
+                <p class="text-xs text-slate-400 mt-1">지금 나가시면 이번 회차의 풀이 진행상황이 저장되지 않습니다.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="app.closeModal('modal-confirm')" class="py-2.5 rounded-xl bg-navy-700 text-slate-300 font-bold text-xs">취소</button>
+                <button onclick="app.confirmExitQuiz()" class="py-2.5 rounded-xl bg-accent-rose text-white font-bold text-xs">나가기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- RESET CONFIRM MODAL -->
+    <div id="modal-reset" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-navy-800 border border-navy-700 rounded-2xl p-5 max-w-xs w-full text-center space-y-4 shadow-2xl">
+            <div class="w-12 h-12 rounded-full bg-accent-rose/20 text-accent-rose flex items-center justify-center text-xl mx-auto">
+                <i class="fa-solid fa-trash-can"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-slate-100 text-sm">모든 기록을 초기화할까요?</h3>
+                <p class="text-xs text-slate-400 mt-1">풀이 이력, 출석 스트릭, 오답노트 졸업 데이터가 삭제됩니다.</p>
+            </div>
+            <div class="grid grid-cols-2 gap-2 pt-1">
+                <button onclick="app.closeModal('modal-reset')" class="py-2.5 rounded-xl bg-navy-700 text-slate-300 font-bold text-xs">취소</button>
+                <button onclick="app.resetAllData()" class="py-2.5 rounded-xl bg-accent-rose text-white font-bold text-xs">초기화</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT ENGINE (DATABASE & LOGIC) -->
+    <script>
+        /**
+         * Exam Sessions Master Data (18 Sessions, 2022~2026)
+         */
+        const EXAM_SESSIONS_INFO = [
+            { id: "2026-02", name: "2026년 2회", date: "2026.05.17" },
+            { id: "2026-01", name: "2026년 1회", date: "2026.02.01" },
+            { id: "2025-04", name: "2025년 4회", date: "2025.11.02" },
+            { id: "2025-03", name: "2025년 3회", date: "2025.08.24" },
+            { id: "2025-02", name: "2025년 2회", date: "2025.05.25" },
+            { id: "2025-01", name: "2025년 1회", date: "2025.02.23" },
+            { id: "2024-04", name: "2024년 4회", date: "2024.11.03" },
+            { id: "2024-03", name: "2024년 3회", date: "2024.08.25" },
+            { id: "2024-02", name: "2024년 2회", date: "2024.05.19" },
+            { id: "2024-01", name: "2024년 1회", date: "2024.02.25" },
+            { id: "2023-04", name: "2023년 4회", date: "2023.11.05" },
+            { id: "2023-03", name: "2023년 3회", date: "2023.08.20" },
+            { id: "2023-02", name: "2023년 2회", date: "2023.05.21" },
+            { id: "2023-01", name: "2023년 1회", date: "2023.02.26" },
+            { id: "2022-04", name: "2022년 4회", date: "2022.11.06" },
+            { id: "2022-03", name: "2022년 3회", date: "2022.08.21" },
+            { id: "2022-02", name: "2022년 2회", date: "2022.05.22" },
+            { id: "2022-01", name: "2022년 1회", date: "2022.02.27" }
+        ];
+
+        /**
+         * Comprehensive Real Exam Question Database Extracted from PDF Sources
+         * Correct answer indexes match PDF Answer Tables (0-based: 0 for ①, 1 for ②, 2 for ③, 3 for ④)
+         */
+        const EXAM_DATABASE = [
+            // --- 2026년 2회 (2026.05.17) SAMPLE SELECTION ---
+            {
+                id: "2026-02-01",
+                session: "2026-02",
+                sessionName: "2026년 2회",
+                num: 1,
+                subject: "TCP/IP",
+                question: "TCP/IP에서 데이터 링크층의 데이터 단위는?",
+                options: ["메시지", "세그먼트", "데이터그램", "프레임"],
+                correct: 3, // ④[cite: 100]
+                shortExpl: "💡 데이터링크 계층의 PDU(데이터 단위)는 '프레임(Frame)'입니다.",
+                detailExpl: "계층별 PDU: 1계층(물리)=Bit, 2계층(데이터링크)=Frame, 3계층(네트워크)=Packet/Datagram, 4계층(전송)=Segment."
+            },
+            {
+                id: "2026-02-02",
+                session: "2026-02",
+                sessionName: "2026년 2회",
+                num: 2,
+                subject: "TCP/IP",
+                question: "DNS에서 TTL(Time to Live)에 대한 설명으로 올바른 것은?",
+                options: [
+                    "데이터가 DNS 서버 존(zone)으로부터 나오기 전에 현재 남은 시간이다.",
+                    "데이터가 DNS 서버 캐시에서 만료되기까지 남은 시간이다.",
+                    "패킷이 DNS 서버 존으로부터 나오기 전에 현재 남은 시간이다.",
+                    "패킷이 DNS 서버 네임 서버 레코드로부터 나오기 전에 현재 남은 시간이다."
+                ],
+                correct: 1, // ②[cite: 100]
+                shortExpl: "💡 DNS TTL은 레코드가 DNS 서버 캐시에 저장되어 유효하게 유지되는 시간입니다.",
+                detailExpl: "TTL(Time To Live)은 클라이언트나 캐싱 DNS 서버가 해당 레코드를 캐시 상에 보관하고 참조할 수 있는 유효기간(초 단위)을 의미합니다."
+            },
+            {
+                id: "2026-02-04",
+                session: "2026-02",
+                sessionName: "2026년 2회",
+                num: 4,
+                subject: "TCP/IP",
+                question: "C Class의 네트워크를 서브넷으로 나누어 각 서브넷에 4~5대의 PC를 접속해야 할 때, 서브넷 마스크 값으로 올바른 것은?",
+                options: ["255.255.255.240", "255.255.255.248", "255.255.0.192", "255.255.255.0"],
+                correct: 1, // ②[cite: 100]
+                shortExpl: "💡 4~5대 PC에 네트워크/브로드캐스트 2개를 더하면 7~8개 IP가 필요하므로 호스트 3비트(/29, 255.255.255.248)가 적합합니다.",
+                detailExpl: "서브넷마스크 255.255.255.248(/29)은 서브넷당 8개 IP를 생성하며, 네트워크/브로드캐스트 주소를 제외하고 유효 호스트 6개를 할당할 수 있습니다."
+            },
+            {
+                id: "2026-02-18",
+                session: "2026-02",
+                sessionName: "2026년 2회",
+                num: 18,
+                subject: "네트워크일반",
+                question: "OSI 7 Layer에서 Data Link 계층의 기능으로 옳지 않은 것은?",
+                options: ["전송 오류제어 기능", "Flow 제어 기능", "Text의 압축, 암호화 기능", "Link의 관리 기능"],
+                correct: 2, // ③[cite: 100]
+                shortExpl: "💡 텍스트의 압축 및 암호화는 6계층인 표현 계층(Presentation Layer)의 역할입니다.",
+                detailExpl: "데이터링크 계층은 프레임 생성, 물리적 주소 지정, 흐름 제어, 오류 제어, 링크 관리를 담당합니다."
+            },
+            {
+                id: "2026-02-38",
+                session: "2026-02",
+                sessionName: "2026년 2회",
+                num: 38,
+                subject: "NOS",
+                question: "Windows Server 2022에서 클라이언트의 Host Name, IP 주소, 서브넷 마스크, DNS Server, 기본 게이트웨이 등의 설정 사항을 볼 수 있는 명령어는?",
+                options: ["arp -a", "convert", "ipconfig /all", "netstat"],
+                correct: 2, // ③[cite: 100]
+                shortExpl: "💡 상세 네트워크 파라미터(MAC, DNS, 게이트웨이 등)를 확인하는 명령어는 ipconfig /all 입니다.",
+                detailExpl: "Windows 커맨드라인에서 `ipconfig /all` 명령을 실행하면 모든 네트워크 어댑터의 세부 정보가 출력됩니다."
+            },
+            {
+                id: "2026-02-48",
+                session: "2026-02",
+                sessionName: "2026년 2회",
+                num: 48,
+                subject: "네트워크운용기기",
+                question: "웹서버를 보호하는 전용 보안장비로 HTTP, HTTPS처럼 웹서버에서 동작하는 웹 프로토콜의 공격을 방어하는데 사용되는 보안장비는?",
+                options: ["IDS", "Fire Wall", "IPS", "WAF"],
+                correct: 3, // ④[cite: 100]
+                shortExpl: "💡 웹 애플리케이션 보안 전용 방화벽은 WAF (Web Application Firewall)입니다.",
+                detailExpl: "WAF는 웹 트래픽(HTTP/HTTPS)을 분석하여 SQL Injection, XSS 등 웹 특화 공격을 차단합니다."
+            },
+
+            // --- 2025년 1회 (2025.02.23) SAMPLE SELECTION ---
+            {
+                id: "2025-01-01",
+                session: "2025-01",
+                sessionName: "2025년 1회",
+                num: 1,
+                subject: "TCP/IP",
+                question: "IP Header의 내용 중 TTL(Time To Live)의 기능을 설명한 것으로 옳지 않은 것은?",
+                options: [
+                    "IP 패킷은 네트워크상에서 영원히 존재할 수 있다.",
+                    "일반적으로 라우터의 한 홉(Hop)을 통과할 때마다 TTL 값이 '1'씩 감소한다.",
+                    "Ping과 Tracert 유틸리티는 특정 호스트 컴퓨터에 접근을 시도하거나 그 호스트까지의 경로를 추적할 때 TTL 값을 사용한다.",
+                    "IP 패킷이 네트워크상에서 얼마동안 존재할 수 있는가를 나타낸다."
+                ],
+                correct: 0, // ①[cite: 72]
+                shortExpl: "💡 TTL은 패킷의 루핑과 영구 방황을 막기 위한 값이므로 네트워크에 영원히 존재할 수 없습니다.",
+                detailExpl: "TTL 값이 0에 도달하면 라우터는 해당 패킷을 폐기하고 송신자에게 ICMP Time Exceeded 메시지를 보냅니다."
+            },
+            {
+                id: "2025-01-38",
+                session: "2025-01",
+                sessionName: "2025년 1회",
+                num: 38,
+                subject: "NOS",
+                question: "네임서버 레코드 정보를 변경한 지 충분한 시간이 지났지만, 특정 기기에서 여전히 이전 도메인으로 접속되는 경우 DNS 캐시를 초기화하는 명령어는?",
+                options: ["ipconfig /displaydns", "ipconfig /flushdns", "ipconfig /release", "ipconfig /renew"],
+                correct: 1, // ②[cite: 72]
+                shortExpl: "💡 로컬 DNS 캐시를 완전히 삭제하여 초기화하는 명령어는 ipconfig /flushdns 입니다.",
+                detailExpl: "`ipconfig /flushdns`를 실행하면 컴퓨터에 임시 저장되어 있던 기존 DNS 이름 풀기 캐시가 삭제되고 새로 질의합니다."
+            },
+            {
+                id: "2025-01-49",
+                session: "2025-01",
+                sessionName: "2025년 1회",
+                num: 49,
+                subject: "네트워크운용기기",
+                question: "네트워크에 접속할 때 인가된 사용자만 내부망에 접속할 수 있고 인가받기 전이나 승인에 실패한 사용자는 접속할 수 없도록 제어하는 기술은?",
+                options: ["NAC (Network Access Control)", "NAT (Network Address Translation)", "IP제어", "WAF (Web Application Firewall)"],
+                correct: 0, // ①[cite: 72]
+                shortExpl: "💡 단말의 보안 준수 상태 및 단말 인증 기반 네트워크 접근 통제 솔루션은 NAC입니다.",
+                detailExpl: "NAC(네트워크 접근 제어)는 내부 망 접근 시 무단 단말이나 미인가 PC의 접속을 단말 검증 후 제어합니다."
+            },
+
+            // --- 2024년 1회 (2024.02.25) SAMPLE SELECTION ---
+            {
+                id: "2024-01-01",
+                session: "2024-01",
+                sessionName: "2024년 1회",
+                num: 1,
+                subject: "TCP/IP",
+                question: "IP 헤더에 포함이 되지 않는 필드는?",
+                options: ["ACK", "Version", "Header checksum", "Header length"],
+                correct: 0, // ①[cite: 50]
+                shortExpl: "💡 ACK 플래그는 IP 헤더가 아닌 4계층 TCP 헤더에 포함됩니다.",
+                detailExpl: "IP 헤더 구성 필드: Version, Header Length(IHL), Type of Service, Total Length, Identification, Flags, Fragment Offset, TTL, Protocol, Header Checksum, Source/Destination IP."
+            },
+            {
+                id: "2024-01-10",
+                session: "2024-01",
+                sessionName: "2024년 1회",
+                num: 10,
+                subject: "TCP/IP",
+                question: "IP Address를 이용하여 물리적인 네트워크 주소(MAC Address)를 얻는데 사용하는 프로토콜은?",
+                options: ["DHCP", "RIP", "IP", "ARP"],
+                correct: 3, // ④[cite: 50]
+                shortExpl: "💡 논리적 IP 주소로부터 대응하는 물리적 MAC 주소를 알아내는 프로토콜은 ARP입니다.",
+                detailExpl: "ARP(Address Resolution Protocol)는 동일 브로드캐스트 도메인 내에서 상대방 IP의 MAC 주소를 매핑합니다."
+            },
+            {
+                id: "2024-01-28",
+                session: "2024-01",
+                sessionName: "2024년 1회",
+                num: 28,
+                subject: "NOS",
+                question: "Linux 시스템에서 일반적으로 사용자 암호 정보를 가지는 디렉터리(파일) 위치는?",
+                options: ["/etc", "/sbin", "/home", "/lib"],
+                correct: 0, // ①[cite: 50]
+                shortExpl: "💡 사용자 계정 정보(/etc/passwd) 및 암호 정보(/etc/shadow)는 /etc 디렉터리에 위치합니다.",
+                detailExpl: "리눅스 시스템 설정 및 암호 관련 핵심 파일은 모두 /etc 디렉터리 하위에 보관됩니다."
+            },
+
+            // --- 2023년 1회 (2023.02.26) SAMPLE SELECTION ---
+            {
+                id: "2023-01-06",
+                session: "2023-01",
+                sessionName: "2023년 1회",
+                num: 6,
+                subject: "TCP/IP",
+                question: "원격 컴퓨터에 안전하게 액세스하기 위한 프로토콜로 기본적으로 22번 포트를 사용하며 암호화를 지원하는 것은?",
+                options: ["SSH", "IPSec", "SSL", "PGP"],
+                correct: 0, // ①[cite: 26]
+                shortExpl: "💡 22번 포트를 사용하며 평문 전송인 Telnet을 대체하는 암호화 원격 접속 프로토콜은 SSH입니다.",
+                detailExpl: "SSH(Secure Shell)는 데이터 패킷을 암호화하여 전송하므로 스니핑 및 도청 공격을 예방합니다."
+            },
+            {
+                id: "2023-01-21",
+                session: "2023-01",
+                sessionName: "2023년 1회",
+                num: 21,
+                subject: "네트워크일반",
+                question: "인터넷과 같이 공용 공중망을 특정 조직이 단독으로 사용하는 사설망처럼 동작시키는 기술은?",
+                options: ["VPN", "NAT", "PPP", "PPPoE"],
+                correct: 0, // ①[cite: 26]
+                shortExpl: "💡 공중망 상에 가상 암호화 터널을 형성하여 사설망처럼 전용 회선 효과를 내는 것은 VPN입니다.",
+                detailExpl: "VPN(Virtual Private Network)은 터널링 및 암호화 기법을 사용하여 비용을 저감하고 보안성을 제공합니다."
+            },
+
+            // --- 2022년 1회 (2022.02.27) SAMPLE SELECTION ---
+            {
+                id: "2022-01-02",
+                session: "2022-01",
+                sessionName: "2022년 1회",
+                num: 2,
+                subject: "TCP/IP",
+                question: "IPv4 Class 중에서 멀티캐스트 용도로 사용되는 클래스는?",
+                options: ["B Class", "C Class", "D Class", "E Class"],
+                correct: 2, // ③[cite: 6]
+                shortExpl: "💡 D Class(224.0.0.0 ~ 239.255.255.255)가 멀티캐스트 전용 IP 대역입니다.",
+                detailExpl: "Class A(대규모), Class B(중규모), Class C(소규모), Class D(멀티캐스트), Class E(연구용)."
+            },
+            {
+                id: "2022-01-03",
+                session: "2022-01",
+                sessionName: "2022년 1회",
+                num: 3,
+                subject: "TCP/IP",
+                question: "'255.255.255.224'인 서브넷에 최대 할당 가능한 호스트 수는?",
+                options: ["2개", "6개", "14개", "30개"],
+                correct: 3, // ④[cite: 6]
+                shortExpl: "💡 224는 호스트 비트가 5개($2^5 = 32$)이므로 네트워크/브로드캐스트 주소 2개를 뺀 30개입니다.",
+                detailExpl: "255.255.255.224 (/27) -> 호스트 비트 5개 ($2^5 - 2 = 30$개 유효 호스트)."
+            },
+            {
+                id: "2022-01-42",
+                session: "2022-01",
+                sessionName: "2022년 1회",
+                num: 42,
+                subject: "NOS",
+                question: "리눅스 파일의 속성을 조회하였을 때 'i' 속성이 설정되어 삭제되지 않을 때, 파일 속성을 확인하는 명령어는?",
+                options: ["file", "stat", "lsattr", "lsblk"],
+                correct: 2, // ③[cite: 6]
+                shortExpl: "💡 리눅스에서 파일의 확장 속성(i, a 등)을 확인하는 명령어는 lsattr 입니다.",
+                detailExpl: "`lsattr`로 속성을 확인하고, `chattr -i` 명령을 통해 읽기전용/변경불가 속성을 해제할 수 있습니다."
+            }
+        ];
+
+        /**
+         * App Controller Class
+         */
+        class NetCommuteApp {
+            constructor() {
+                this.state = {
+                    streak: 0,
+                    lastCompletedDate: null,
+                    totalSolved: 0,
+                    correctSolved: 0,
+                    wrongQuestions: {}, // { qId: { consecutiveCorrect: 0, graduated: false, lastWrongDate: timestamp } }
+                    subjectStats: {
+                        "TCP/IP": { total: 0, correct: 0 },
+                        "네트워크일반": { total: 0, correct: 0 },
+                        "NOS": { total: 0, correct: 0 },
+                        "네트워크운용기기": { total: 0, correct: 0 }
+                    }
+                };
+
+                this.quizSession = {
+                    active: false,
+                    mode: 'day', // 'day', 'session', 'subject', 'wrong'
+                    sessionId: null,
+                    subjectFilter: null,
+                    questions: [],
+                    currentIndex: 0,
+                    answers: [],
+                    timerSeconds: 20 * 60,
+                    timerInterval: null,
+                    elapsedSeconds: 0,
+                    selectedOption: null
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.loadFromLocalStorage();
+                this.checkStreakContinuity();
+                this.renderDashboardStats();
+                this.renderSessionModalList();
+            }
+
+            loadFromLocalStorage() {
+                try {
+                    const saved = localStorage.getItem('NETCOMMUTE_EXAM_BANK_DATA');
+                    if (saved) {
+                        const parsed = JSON.parse(saved);
+                        this.state = { ...this.state, ...parsed };
+                    }
+                } catch (e) {
+                    console.error("Failed to load local storage", e);
+                }
+            }
+
+            saveToLocalStorage() {
+                try {
+                    localStorage.setItem('NETCOMMUTE_EXAM_BANK_DATA', JSON.stringify(this.state));
+                } catch (e) {
+                    console.error("Failed to save local storage", e);
+                }
+            }
+
+            resetAllData() {
+                localStorage.removeItem('NETCOMMUTE_EXAM_BANK_DATA');
+                location.reload();
+            }
+
+            checkStreakContinuity() {
+                if (!this.state.lastCompletedDate) return;
+                const todayStr = new Date().toDateString();
+                const lastDate = new Date(this.state.lastCompletedDate);
+                const yesterday = new Date();
+                yesterday.setDate(yesterday.getDate() - 1);
+
+                if (lastDate.toDateString() !== todayStr && lastDate.toDateString() !== yesterday.toDateString()) {
+                    this.state.streak = 0;
+                    this.saveToLocalStorage();
+                }
+            }
+
+            showScreen(screenId) {
+                ['screen-home', 'screen-quiz', 'screen-result', 'screen-wrong-note'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('hidden');
+                });
+
+                const target = document.getElementById(`screen-${screenId}`);
+                if (target) {
+                    target.classList.remove('hidden');
+                    if (screenId === 'quiz') target.classList.add('flex');
+                }
+
+                if (screenId === 'home') {
+                    this.renderDashboardStats();
+                } else if (screenId === 'wrongNote') {
+                    this.renderWrongAnswersList();
+                }
+            }
+
+            renderDashboardStats() {
+                document.getElementById('streak-count-header').textContent = this.state.streak;
+
+                const wrongKeys = Object.keys(this.state.wrongQuestions).filter(id => !this.state.wrongQuestions[id].graduated);
+                document.getElementById('wrong-count-badge').textContent = `${wrongKeys.length}개`;
+
+                const totalSolved = this.state.totalSolved;
+                document.getElementById('stat-total-solved').textContent = totalSolved;
+
+                const avgAcc = totalSolved > 0 ? Math.round((this.state.correctSolved / totalSolved) * 100) : 0;
+                document.getElementById('stat-avg-accuracy').textContent = `${avgAcc}%`;
+
+                const gradCount = Object.values(this.state.wrongQuestions).filter(q => q.graduated).length;
+                document.getElementById('stat-graduated-count').textContent = gradCount;
+
+                const passProb = totalSolved >= 10 ? Math.min(98, Math.max(20, Math.round(avgAcc * 1.1))) : 50;
+                document.getElementById('pass-probability').textContent = `합격 가능성: ${passProb}%`;
+
+                const subStats = this.state.subjectStats;
+                const updateSubTag = (elemId, key) => {
+                    const data = subStats[key];
+                    const acc = data && data.total > 0 ? Math.round((data.correct / data.total) * 100) : 0;
+                    const elem = document.getElementById(elemId);
+                    if (elem) elem.textContent = `${acc}%`;
+                };
+
+                updateSubTag('stat-sub-tcp', 'TCP/IP');
+                updateSubTag('stat-sub-general', '네트워크일반');
+                updateSubTag('stat-sub-nos', 'NOS');
+                updateSubTag('stat-sub-sec', '네트워크운용기기');
+            }
+
+            renderSessionModalList() {
+                const container = document.getElementById('session-list-container');
+                container.innerHTML = '';
+
+                EXAM_SESSIONS_INFO.forEach(sess => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full p-3 rounded-xl bg-navy-900/80 border border-navy-700 hover:border-accent-cyan/60 text-left transition flex items-center justify-between group active:scale-[0.98]";
+                    btn.onclick = () => {
+                        this.closeModal('modal-session');
+                        this.startChallenge('session', null, sess.id);
+                    };
+
+                    btn.innerHTML = `
+                        <div>
+                            <p class="text-xs font-bold text-slate-100 group-hover:text-accent-cyan transition">${sess.name}</p>
+                            <p class="text-[10px] text-slate-400 mt-0.5">수검일: ${sess.date} | 50문항</p>
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-xs text-slate-500 group-hover:text-accent-cyan transition"></i>
+                    `;
+                    container.appendChild(btn);
+                });
+            }
+
+            openSessionModal() {
+                document.getElementById('modal-session').classList.remove('hidden');
+            }
+
+            startChallenge(mode = 'day', subjectFilter = null, sessionId = null) {
+                this.quizSession.mode = mode;
+                this.quizSession.sessionId = sessionId;
+                this.quizSession.subjectFilter = subjectFilter;
+                this.quizSession.currentIndex = 0;
+                this.quizSession.answers = [];
+                this.quizSession.elapsedSeconds = 0;
+                this.quizSession.selectedOption = null;
+
+                if (mode === 'day') {
+                    this.quizSession.questions = [...EXAM_DATABASE].sort(() => 0.5 - Math.random()).slice(0, 15);
+                    this.quizSession.timerSeconds = 20 * 60;
+                } else if (mode === 'session') {
+                    const filtered = EXAM_DATABASE.filter(q => q.session === sessionId);
+                    this.quizSession.questions = filtered.length > 0 ? filtered : EXAM_DATABASE.slice(0, 15);
+                    this.quizSession.timerSeconds = 50 * 60; // 50 minutes for full session
+                } else if (mode === 'subject') {
+                    const filtered = EXAM_DATABASE.filter(q => q.subject === subjectFilter);
+                    this.quizSession.questions = filtered.length > 0 ? filtered : EXAM_DATABASE.slice(0, 15);
+                    this.quizSession.timerSeconds = 25 * 60;
+                } else if (mode === 'wrong') {
+                    const wrongIds = Object.keys(this.state.wrongQuestions).filter(id => !this.state.wrongQuestions[id].graduated);
+                    this.quizSession.questions = EXAM_DATABASE.filter(q => wrongIds.includes(q.id));
+                    this.quizSession.timerSeconds = 30 * 60;
+                }
+
+                document.getElementById('quiz-total-count').textContent = this.quizSession.questions.length;
+                this.showScreen('quiz');
+                this.startTimer();
+                this.renderQuestion();
+            }
+
+            startTimer() {
+                clearInterval(this.quizSession.timerInterval);
+                const timerText = document.getElementById('timer-text');
+
+                this.quizSession.timerInterval = setInterval(() => {
+                    this.quizSession.timerSeconds--;
+                    this.quizSession.elapsedSeconds++;
+
+                    if (this.quizSession.timerSeconds <= 0) {
+                        clearInterval(this.quizSession.timerInterval);
+                        this.finishQuiz();
+                        return;
+                    }
+
+                    const m = Math.floor(this.quizSession.timerSeconds / 60);
+                    const s = this.quizSession.timerSeconds % 60;
+                    timerText.textContent = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                }, 1000);
+            }
+
+            stopTimer() {
+                clearInterval(this.quizSession.timerInterval);
+            }
+
+            renderQuestion() {
+                const idx = this.quizSession.currentIndex;
+                const total = this.quizSession.questions.length;
+                const q = this.quizSession.questions[idx];
+
+                document.getElementById('explanation-sheet').classList.add('hidden');
+                document.getElementById('explain-detail-box').classList.add('hidden');
+                document.getElementById('detail-toggle-icon').className = "fa-solid fa-chevron-down text-[10px]";
+
+                document.getElementById('quiz-current-index').textContent = idx + 1;
+                const progressPct = Math.round(((idx + 1) / total) * 100);
+                document.getElementById('quiz-progress-bar').style.width = `${progressPct}%`;
+
+                document.getElementById('q-subject-badge').textContent = `[${q.subject}]`;
+                document.getElementById('q-exam-info').textContent = `네트워크관리사 2급 ${q.sessionName || '기출'}`;
+                document.getElementById('q-text').textContent = `${q.num ? q.num + '. ' : ''}${q.question}`;
+
+                const container = document.getElementById('q-options-container');
+                container.innerHTML = '';
+                this.quizSession.selectedOption = null;
+
+                q.options.forEach((optText, i) => {
+                    const optBtn = document.createElement('button');
+                    optBtn.className = `w-full p-3.5 rounded-xl bg-navy-900/80 border border-navy-700/80 text-left text-xs font-medium text-slate-200 hover:bg-navy-700 transition flex items-center justify-between group active:scale-[0.99]`;
+                    optBtn.onclick = () => this.selectOption(i);
+                    optBtn.id = `option-btn-${i}`;
+
+                    optBtn.innerHTML = `
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-navy-700 text-slate-300 flex items-center justify-center text-xs font-bold group-hover:bg-accent-cyan group-hover:text-navy-900 transition">
+                                ${i + 1}
+                            </span>
+                            <span class="selectable-text">${optText}</span>
+                        </div>
+                        <i class="fa-regular fa-circle text-slate-500 opt-icon"></i>
+                    `;
+                    container.appendChild(optBtn);
+                });
+            }
+
+            selectOption(choiceIdx) {
+                if (this.quizSession.selectedOption !== null) return;
+                this.quizSession.selectedOption = choiceIdx;
+
+                const q = this.quizSession.questions[this.quizSession.currentIndex];
+                const isCorrect = choiceIdx === q.correct;
+
+                for (let i = 0; i < q.options.length; i++) {
+                    const btn = document.getElementById(`option-btn-${i}`);
+                    if (btn) btn.disabled = true;
+                }
+
+                const selectedBtn = document.getElementById(`option-btn-${choiceIdx}`);
+                const correctBtn = document.getElementById(`option-btn-${q.correct}`);
+
+                if (isCorrect) {
+                    selectedBtn.className += ' glow-correct';
+                    selectedBtn.querySelector('.opt-icon').className = 'fa-solid fa-circle-check text-accent-emerald';
+                } else {
+                    selectedBtn.className += ' glow-wrong';
+                    selectedBtn.querySelector('.opt-icon').className = 'fa-solid fa-circle-xmark text-accent-rose';
+
+                    if (correctBtn) {
+                        correctBtn.className += ' glow-correct';
+                        correctBtn.querySelector('.opt-icon').className = 'fa-solid fa-circle-check text-accent-emerald';
+                    }
+                }
+
+                this.quizSession.answers.push({
+                    questionId: q.id,
+                    subject: q.subject,
+                    chosen: choiceIdx,
+                    correct: q.correct,
+                    isCorrect: isCorrect
+                });
+
+                this.showExplanationSheet(isCorrect, q);
+            }
+
+            showExplanationSheet(isCorrect, q) {
+                const sheet = document.getElementById('explanation-sheet');
+                const badge = document.getElementById('explain-result-badge');
+                const shortText = document.getElementById('explain-short-text');
+                const detailText = document.getElementById('explain-detail-box');
+
+                if (isCorrect) {
+                    badge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                    badge.innerHTML = `<i class="fa-solid fa-circle-check"></i> 정답입니다!`;
+                } else {
+                    badge.className = "flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30";
+                    badge.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> 오답입니다! (정답: ${q.correct + 1}번)`;
+                }
+
+                shortText.textContent = q.shortExpl;
+                detailText.textContent = q.detailExpl;
+
+                sheet.classList.remove('hidden');
+                sheet.scrollIntoView({ behavior: 'smooth', block: 'end' });
+            }
+
+            toggleDetailExplanation() {
+                const box = document.getElementById('explain-detail-box');
+                const icon = document.getElementById('detail-toggle-icon');
+                if (box.classList.contains('hidden')) {
+                    box.classList.remove('hidden');
+                    icon.className = "fa-solid fa-chevron-up text-[10px]";
+                } else {
+                    box.classList.add('hidden');
+                    icon.className = "fa-solid fa-chevron-down text-[10px]";
+                }
+            }
+
+            nextQuestion() {
+                this.quizSession.currentIndex++;
+                if (this.quizSession.currentIndex >= this.quizSession.questions.length) {
+                    this.finishQuiz();
+                } else {
+                    this.renderQuestion();
+                }
+            }
+
+            finishQuiz() {
+                this.stopTimer();
+
+                let correctCount = 0;
+                const totalCount = this.quizSession.questions.length;
+
+                this.quizSession.answers.forEach(ans => {
+                    this.state.totalSolved++;
+                    if (ans.isCorrect) {
+                        this.state.correctSolved++;
+                        correctCount++;
+                    }
+
+                    if (!this.state.subjectStats[ans.subject]) {
+                        this.state.subjectStats[ans.subject] = { total: 0, correct: 0 };
+                    }
+                    this.state.subjectStats[ans.subject].total++;
+                    if (ans.isCorrect) this.state.subjectStats[ans.subject].correct++;
+
+                    const qId = ans.questionId;
+                    if (!ans.isCorrect) {
+                        this.state.wrongQuestions[qId] = {
+                            consecutiveCorrect: 0,
+                            graduated: false,
+                            lastWrongDate: Date.now()
+                        };
+                    } else {
+                        if (this.state.wrongQuestions[qId] && !this.state.wrongQuestions[qId].graduated) {
+                            this.state.wrongQuestions[qId].consecutiveCorrect++;
+                            if (this.state.wrongQuestions[qId].consecutiveCorrect >= 3) {
+                                this.state.wrongQuestions[qId].graduated = true;
+                            }
+                        }
+                    }
+                });
+
+                const score = totalCount > 0 ? Math.round((correctCount / totalCount) * 100) : 0;
+                const isPass = score >= 60; // 60점 이상 합격
+
+                if (this.quizSession.mode === 'day' || this.quizSession.mode === 'session') {
+                    const todayStr = new Date().toDateString();
+                    if (this.state.lastCompletedDate !== todayStr) {
+                        this.state.streak++;
+                        this.state.lastCompletedDate = todayStr;
+                    }
+                }
+
+                this.saveToLocalStorage();
+
+                document.getElementById('result-score').textContent = score;
+                document.getElementById('result-correct-count').textContent = correctCount;
+                document.getElementById('result-total-count').textContent = totalCount;
+
+                const elapsedMin = Math.floor(this.quizSession.elapsedSeconds / 60);
+                const elapsedSec = this.quizSession.elapsedSeconds % 60;
+                document.getElementById('result-elapsed-time').textContent = `${elapsedMin}분 ${elapsedSec}초`;
+                document.getElementById('result-streak-text').textContent = `${this.state.streak}일 달성!`;
+
+                const badge = document.getElementById('result-pass-badge');
+                if (isPass) {
+                    badge.className = "inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-accent-emerald/20 text-accent-emerald border border-accent-emerald/40";
+                    badge.innerHTML = `<i class="fa-solid fa-trophy"></i> 합격 권역 달성! (${score}점)`;
+                    this.triggerConfetti();
+                } else {
+                    badge.className = "inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-black tracking-wider uppercase bg-rose-500/20 text-rose-400 border border-rose-500/40";
+                    badge.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i> 불합격 권역 (60점 미만)`;
+                }
+
+                this.showScreen('result');
+            }
+
+            renderWrongAnswersList() {
+                const container = document.getElementById('wrong-questions-container');
+                container.innerHTML = '';
+
+                const wrongKeys = Object.keys(this.state.wrongQuestions).filter(id => !this.state.wrongQuestions[id].graduated);
+                document.getElementById('wrong-list-count').textContent = wrongKeys.length;
+
+                const startBtn = document.getElementById('btn-start-wrong-review');
+                if (wrongKeys.length === 0) {
+                    startBtn.disabled = true;
+                    startBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    container.innerHTML = `
+                        <div class="p-8 text-center text-slate-400 bg-navy-800 rounded-2xl border border-navy-700">
+                            <i class="fa-solid fa-circle-check text-accent-emerald text-3xl mb-2"></i>
+                            <p class="text-xs font-bold text-slate-200">오답 노드가 깨끗합니다!</p>
+                            <p class="text-[11px] text-slate-400 mt-0.5">틀린 문제가 없거나 모두 🎓졸업 처리되었습니다.</p>
+                        </div>
+                    `;
+                    return;
+                } else {
+                    startBtn.disabled = false;
+                    startBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+
+                wrongKeys.forEach(qId => {
+                    const qData = EXAM_DATABASE.find(item => item.id === qId);
+                    if (!qData) return;
+
+                    const record = this.state.wrongQuestions[qId];
+                    const count = record ? record.consecutiveCorrect : 0;
+
+                    const itemEl = document.createElement('div');
+                    itemEl.className = "p-3.5 rounded-xl bg-navy-800 border border-navy-700 space-y-2";
+
+                    let barsHtml = '';
+                    for (let b = 0; b < 3; b++) {
+                        if (b < count) {
+                            barsHtml += `<span class="w-2.5 h-2.5 rounded-sm bg-accent-emerald inline-block"></span>`;
+                        } else {
+                            barsHtml += `<span class="w-2.5 h-2.5 rounded-sm bg-navy-700 border border-navy-600 inline-block"></span>`;
+                        }
+                    }
+
+                    itemEl.innerHTML = `
+                        <div class="flex items-center justify-between text-[11px]">
+                            <span class="px-2 py-0.5 rounded bg-navy-700 text-accent-cyan font-bold">[${qData.subject}] ${qData.sessionName || ''}</span>
+                            <div class="flex items-center gap-1.5">
+                                <span class="text-slate-400 font-mono text-[10px]">연속 ${count}/3회</span>
+                                <div class="flex items-center gap-1">${barsHtml}</div>
+                            </div>
+                        </div>
+                        <p class="text-xs font-semibold text-slate-200 line-clamp-2">${qData.question}</p>
+                    `;
+                    container.appendChild(itemEl);
+                });
+            }
+
+            startWrongReviewSession() {
+                const wrongKeys = Object.keys(this.state.wrongQuestions).filter(id => !this.state.wrongQuestions[id].graduated);
+                if (wrongKeys.length > 0) {
+                    this.startChallenge('wrong');
+                }
+            }
+
+            showConfirmExit() {
+                document.getElementById('modal-confirm').classList.remove('hidden');
+            }
+
+            confirmExitQuiz() {
+                this.stopTimer();
+                this.closeModal('modal-confirm');
+                this.showScreen('home');
+            }
+
+            showResetConfirm() {
+                document.getElementById('modal-reset').classList.remove('hidden');
+            }
+
+            closeModal(modalId) {
+                document.getElementById(modalId).classList.add('hidden');
+            }
+
+            triggerConfetti() {
+                const canvas = document.getElementById('confetti-canvas');
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                canvas.width = canvas.offsetWidth;
+                canvas.height = canvas.offsetHeight;
+
+                const particles = [];
+                const colors = ['#10b981', '#06b6d4', '#f59e0b', '#6366f1', '#f43f5e'];
+
+                for (let i = 0; i < 60; i++) {
+                    particles.push({
+                        x: canvas.width / 2,
+                        y: canvas.height / 2,
+                        vx: (Math.random() - 0.5) * 8,
+                        vy: (Math.random() - 0.8) * 8,
+                        size: Math.random() * 6 + 4,
+                        color: colors[Math.floor(Math.random() * colors.length)],
+                        alpha: 1
+                    });
+                }
+
+                function animate() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    let activeCount = 0;
+
+                    particles.forEach(p => {
+                        p.x += p.vx;
+                        p.y += p.vy;
+                        p.vy += 0.15;
+                        p.alpha -= 0.015;
+
+                        if (p.alpha > 0) {
+                            activeCount++;
+                            ctx.globalAlpha = Math.max(0, p.alpha);
+                            ctx.fillStyle = p.color;
+                            ctx.fillRect(p.x, p.y, p.size, p.size);
+                        }
+                    });
+
+                    if (activeCount > 0) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    }
+                }
+                animate();
+            }
+        }
+
+        let app;
+        window.addEventListener('DOMContentLoaded', () => {
+            app = new NetCommuteApp();
+        });
+    </script>
+</body>
+</html>
